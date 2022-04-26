@@ -1,0 +1,30 @@
+name: Build and deploy app
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16'
+
+    - name: npm install and build
+      run: |
+        npm ci
+        npm run build
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.3.2
+      with:
+        folder: dist
+        branch: gh-pages
