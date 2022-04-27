@@ -1,11 +1,11 @@
-import { derived, writable } from 'svelte/store'
+import { writable } from 'svelte/store'
 import { LocalStorageKey } from '../localStorage/localStorage'
 
 export const leftEditorStore = writable(
-  localStorage.getItem(LocalStorageKey.leftText),
+  localStorage.getItem(LocalStorageKey.leftText) ?? '',
 )
 export const rightEditorStore = writable(
-  localStorage.getItem(LocalStorageKey.rightText),
+  localStorage.getItem(LocalStorageKey.rightText) ?? '',
 )
 
 leftEditorStore.subscribe((value) => {

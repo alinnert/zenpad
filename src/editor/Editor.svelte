@@ -1,7 +1,6 @@
 <script lang="ts">
-  import Statusbar from './Statusbar.svelte'
-  import StatusbarButton from './StatusbarButton.svelte'
-  import StatusbarItem from './StatusbarItem.svelte'
+  import ToolbarButton from './ToolbarButton.svelte'
+  import ToolbarText from './ToolbarText.svelte'
   import { getWordCount } from './wordCounter'
 
   export let editorStore
@@ -18,7 +17,7 @@
 <div class="grid justify-center p-4">
   <div
     class={`
-      grid grid-rows-[1fr,auto]
+      grid grid-rows-[auto,1fr,auto]
       w-[80ex] max-w-full
       border border-gray-300
       rounded-md
@@ -26,6 +25,14 @@
       overflow-hidden
     `}
   >
+    <div class="border-b border-gray-300 flex">
+      <div class="flex">
+        <ToolbarButton icon="document">File</ToolbarButton>
+        <ToolbarText>Temporary</ToolbarText>
+      </div>
+      <div class="ml-auto flex" />
+    </div>
+
     <textarea
       class={`
         px-4 py-2
@@ -37,22 +44,18 @@
       value={$editorStore}
     />
 
-    <Statusbar>
-      <svelte:fragment slot="left">
-        <StatusbarButton>Focus</StatusbarButton>
-        <StatusbarButton>Minimize</StatusbarButton>
-      </svelte:fragment>
-
-      <svelte:fragment slot="right">
-        <StatusbarItem>
+    <div class="border-t border-gray-300 flex">
+      <div class="flex">
+        <ToolbarText>
           {$editorStore.length}
           {$editorStore.length === 1 ? 'character' : 'characters'}
-        </StatusbarItem>
-        <StatusbarItem>
+        </ToolbarText>
+        <ToolbarText>
           {wordCount}
           {wordCount === 1 ? 'word' : 'words'}
-        </StatusbarItem>
-      </svelte:fragment>
-    </Statusbar>
+        </ToolbarText>
+      </div>
+      <div class="ml-auto flex" />
+    </div>
   </div>
 </div>
