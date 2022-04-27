@@ -14,13 +14,13 @@
   }
 </script>
 
-<div class="grid justify-center p-4">
+<div class="grid justify-center pt-4">
   <div
     class={`
       grid grid-rows-[auto,1fr,auto]
       w-[80ex] max-w-full
-      border border-gray-300
-      rounded-md
+      border-l border-t border-r border-gray-300
+      rounded-t-md
       bg-white
       overflow-hidden
     `}
