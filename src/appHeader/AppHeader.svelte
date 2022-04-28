@@ -2,6 +2,7 @@
   import { themeStore } from '../themes'
   import Clock from './Clock.svelte'
   import MenuItem from './MenuItem.svelte'
+  import logo from '../assets/logo-plain.svg?raw'
 </script>
 
 <div
@@ -14,13 +15,16 @@
   `}
 >
   <div class="flex items-center">
-    <h1 class="px-4 font-semibold">zenpad</h1>
+    <h1 class="px-4 font-semibold flex items-center">
+      <div class="w-4 mx-2 fill-slate-600">{@html logo}</div>
+      zenpad
+    </h1>
     <MenuItem icon="cog" label="Settings" />
 
     <MenuItem label="white" on:click={() => themeStore.set('white')} />
-    <MenuItem label="beige" on:click={() => themeStore.set('beige')} />
-    <MenuItem label="blue" on:click={() => themeStore.set('blue')} />
-    <MenuItem label="green" on:click={() => themeStore.set('green')} />
+    <MenuItem label="slate-50" on:click={() => themeStore.set('slate')} />
+    <MenuItem label="sky-50" on:click={() => themeStore.set('blue')} />
+    <MenuItem label="emerald-50" on:click={() => themeStore.set('green')} />
   </div>
   <div class="flex items-center">
     <MenuItem icon="chevron-double-left" />

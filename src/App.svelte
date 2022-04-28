@@ -9,22 +9,30 @@
   class={`
     fixed inset-0
     grid grid-rows-[auto,1fr] grid-cols-[1fr,1fr]
-    transition-colors
+    transition-colors duration-500
     bg-[color:var(--bg)]
-    ${
-      $themeStore === 'white'
-        ? '[--bg:white]'
-        : $themeStore === 'beige'
-        ? '[--bg:beige]'
-        : $themeStore === 'blue'
-        ? '[--bg:#ddddff]'
-        : $themeStore === 'green'
-        ? '[--bg:#ddffdd]'
-        : 'white'
-    }
+    theme-${$themeStore}
   `}
 >
   <AppHeader />
   <Editor editorStore={leftEditorStore} />
   <Editor editorStore={rightEditorStore} />
 </div>
+
+<style>
+  .theme-white {
+    --bg: white;
+  }
+
+  .theme-slate {
+    --bg: #f8fafc;
+  }
+
+  .theme-blue {
+    --bg: #f0f9ff;
+  }
+
+  .theme-green {
+    --bg: #ecfdf5;
+  }
+</style>
