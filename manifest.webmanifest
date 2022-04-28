@@ -1,4 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "zenpad",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "description": "A web-based distraction free text editor",
+  "theme_color": "#ffffff",
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "/icon-1024.png",
