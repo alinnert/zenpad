@@ -2,6 +2,7 @@
   import AppHeader from './appHeader/AppHeader.svelte'
   import Editor from './editor/Editor.svelte'
   import { leftEditorStore, rightEditorStore } from './editor/editorStore'
+  import Settings from './settings/Settings.svelte'
   import { themeStore } from './themes'
 </script>
 
@@ -15,6 +16,7 @@
   `}
 >
   <AppHeader />
+  <Settings />
   <Editor editorStore={leftEditorStore} />
   <Editor editorStore={rightEditorStore} />
 </div>

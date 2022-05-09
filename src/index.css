@@ -6,4 +6,8 @@
   :root {
     user-select: none;
   }
+
+  button {
+    cursor: default;
+  }
 }
