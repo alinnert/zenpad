@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
   </head>
-  <body>
-    <div class="fixed inset-0 grid grid-cols-2 grid-rows-[auto,1fr] bg-sky-50 select-none">
+  <body class="select-none">
+    <div class="fixed inset-0 grid grid-cols-2 grid-rows-[auto,1fr] bg-sky-50">
       <div class="grid grid-cols-[1fr,auto] col-span-2 px-4 py-2">
         <div>
           <h1>zenpad</h1>
@@ -20,6 +20,22 @@
       <text-editor editor-name="left"></text-editor>
       <text-editor editor-name="right"></text-editor>
     </div>
+
+    <app-sidebar>
+      <tabs-container>
+        <tabs-tab label="General">
+          General tab
+        </tabs-tab>
+
+        <tabs-tab label="Themes">
+          Themes tab
+        </tabs-tab>
+
+        <tabs-tab label="About">
+          About tab
+        </tabs-tab>
+      </tabs-container>
+    </app-sidebar>
 
     <template id="text-editor-template">
       <div class="grid p-4">
