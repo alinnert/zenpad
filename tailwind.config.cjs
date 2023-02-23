@@ -1,14 +1,11 @@
-const plugin = require('tailwindcss/plugin')
-
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx,svelte}'],
+  content: [
+    "./index.html",
+    "./src/**/*.ts"
+  ],
   theme: {
     extend: {},
   },
-  plugins: [
-    plugin(({ addVariant }) => {
-      addVariant('backdrop', '&::backdrop')
-      addVariant('open', '&[open]')
-    }),
-  ],
+  plugins: [],
 }
