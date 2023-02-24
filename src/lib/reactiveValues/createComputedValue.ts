@@ -1,12 +1,7 @@
-import { AutomatedValue } from './createAutomatedValue'
-import { ReactiveValue } from './createValue'
-import { ReactiveValueListener } from './types'
+import { AnyReactiveValue, ReactiveValueListener } from './types'
 
 type ReactiveSources<Sources extends unknown[]> = {
-  [K in keyof Sources]:
-    | ReactiveValue<Sources[K]>
-    | ComputedValue<Sources[K]>
-    | AutomatedValue<Sources[K]>
+  [K in keyof Sources]: AnyReactiveValue<Sources, K>
 }
 
 export type ComputedValue<Result> = {

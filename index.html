@@ -7,39 +7,66 @@
     <title>Vite + TS</title>
   </head>
   <body class="select-none">
-    <div class="fixed inset-0 grid grid-cols-2 grid-rows-[auto,1fr] bg-sky-50">
-      <div class="grid grid-cols-[1fr,auto] col-span-2 px-4 py-2">
-        <div>
-          <h1>zenpad</h1>
-        </div>
-        <div>
-          <display-time></display-time>
-        </div>
-      </div>
-
+    <app-frame>
       <text-editor editor-name="left"></text-editor>
       <text-editor editor-name="right"></text-editor>
-    </div>
+    </app-frame>
 
     <app-sidebar>
       <tabs-container>
-        <tabs-tab label="General">
-          General tab
-        </tabs-tab>
+        <tabs-tab label="General"> General tab </tabs-tab>
 
-        <tabs-tab label="Themes">
-          Themes tab
-        </tabs-tab>
+        <tabs-tab label="Themes"> Themes tab </tabs-tab>
 
         <tabs-tab label="About">
-          About tab
+          <div class="prose">
+            <h2>About zenpad</h2>
+            <p>Zenpad is a text editor for the web.</p>
+            <p>This app has been made possible thanks to:</p>
+            <ul>
+              <li>
+                <a href="https://github.com/codemirror/dev/">CodeMirror</a>
+              </li>
+              <li>
+                <a href="https://github.com/vitejs/vite">Vite</a>
+              </li>
+              <li>
+                <a href="https://github.com/microsoft/TypeScript">TypeScript</a>
+              </li>
+              <li>
+                <a href="https://github.com/tailwindlabs/tailwindcss"
+                  >TailwindCSS</a
+                >, <a href="https://postcss.org/">PostCSS</a>,
+                <a href="https://github.com/postcss/autoprefixer"
+                  >Autoprefixer</a
+                >
+              </li>
+            </ul>
+          </div>
         </tabs-tab>
       </tabs-container>
     </app-sidebar>
 
+    <template id="app-frame-template">
+      <div class="fixed inset-0 grid grid-rows-[auto,1fr] bg-sky-50">
+        <div class="grid grid-cols-[1fr,auto] px-4 py-2">
+          <div>
+            <h1 data-slot="toggle-sidebar">zenpad</h1>
+          </div>
+          <div>
+            <display-time></display-time>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2" data-slot="editors"></div>
+      </div>
+    </template>
+
     <template id="text-editor-template">
       <div class="grid p-4">
-        <div class="grid grid-rows-[auto,1fr,auto] bg-white border border-gray-300 rounded-md">
+        <div
+          class="grid grid-rows-[auto,1fr,auto] bg-white border border-gray-300 rounded-md"
+        >
           <div class="px-4 py-2" data-slot="header"></div>
           <div class="grid whitespace-pre-wrap" data-slot="editor"></div>
           <div class="px-4 py-2" data-slot="footer"></div>

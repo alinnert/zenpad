@@ -2,8 +2,9 @@ import { indentLess, insertTab } from '@codemirror/commands'
 import { EditorView, KeyBinding, keymap, ViewUpdate } from '@codemirror/view'
 import {
   createValue,
-  ReactiveValue,
+  ReactiveValue
 } from '../../lib/reactiveValues/createValue'
+import { parseTemplate } from '../../lib/templateParser/parseTemplate'
 
 export const editorTextStates: Record<string, ReactiveValue<string>> = {
   left: createValue(''),
@@ -12,10 +13,7 @@ export const editorTextStates: Record<string, ReactiveValue<string>> = {
 
 export class TextEditor extends HTMLElement {
   #editorName = this.getAttribute('editor-name')
-  #template = document.getElementById('text-editor-template')
-  #editorSlot: HTMLDivElement | null = null
-  #headerSlot: HTMLSpanElement | null = null
-  #footerSlot: HTMLSpanElement | null = null
+  #template = parseTemplate('text-editor-template')
   // #editorView: EditorView | null = null
 
   get #editorTextState(): ReactiveValue<string> | null {
@@ -24,28 +22,16 @@ export class TextEditor extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.#template === null) {
-      console.error('template "text-editor-template" is missing.')
+    if (!this.#template.ok) {
+      console.error(this.#template.error)
       return
     }
-    if (!(this.#template instanceof HTMLTemplateElement)) {
-      console.error('template "text-editor-template" is not a template element')
-      return
-    }
-
-    const node = this.#template.content.cloneNode(true)
-    this.appendChild(node)
-
-    this.#editorSlot = this.querySelector('div[data-slot=editor]')
-    this.#headerSlot = this.querySelector('div[data-slot=header]')
-    this.#footerSlot = this.querySelector('div[data-slot=footer]')
-
+    this.appendChild(this.#template.node)
     this.classList.add('grid')
 
     this.#editorTextState?.onChange((text) => this.#onTextChange(text))
 
-    if (this.#editorSlot !== null) {
-      // this.#editorView =
+    this.#template.forEachSlot('editor', (editorSlot) => {
       new EditorView({
         doc: this.#editorTextState?.value ?? '',
         extensions: [
@@ -54,13 +40,13 @@ export class TextEditor extends HTMLElement {
             this.#onEditorUpdate(update),
           ),
         ],
-        parent: this.#editorSlot,
+        parent: editorSlot,
       })
-    }
+    })
 
-    if (this.#headerSlot !== null) {
-      this.#headerSlot.textContent = `(editor "${this.#editorName}")`
-    }
+    this.#template.forEachSlot('header', (headerSlot) => {
+      headerSlot.textContent = `(editor "${this.#editorName}")`
+    })
   }
 
   #onEditorUpdate(update: ViewUpdate) {
@@ -69,13 +55,17 @@ export class TextEditor extends HTMLElement {
   }
 
   #onTextChange(text: string) {
-    if (this.#footerSlot === null) return
+    if (!this.#template.ok) return
     const whitespaceMatches = text.replace(/['";:,.?¿\-!¡]+/g, '').match(/\S+/g)
     const wordCount = whitespaceMatches?.length ?? 0
     const charCount = text.length
-    this.#footerSlot.textContent = `${charCount} ${
-      charCount === 1 ? 'character' : 'characters'
-    } / ${wordCount} ${wordCount === 1 ? 'word' : 'words'}`
+    const characterPluralized = charCount === 1 ? 'character' : 'characters'
+    const wordPluralized = wordCount === 1 ? 'word' : 'words'
+    const counterString = `${charCount} ${characterPluralized} / ${wordCount} ${wordPluralized}`
+
+    this.#template.forEachSlot('footer', (footerSlot) => {
+      footerSlot.textContent = counterString
+    })
   }
 
   #getKeybindings(): KeyBinding[] {

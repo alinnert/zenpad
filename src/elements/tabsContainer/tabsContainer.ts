@@ -32,6 +32,8 @@ export class TabsContainer extends HTMLElement {
   #tabsSlot: HTMLDivElement | null = null
 
   connectedCallback() {
+    this.classList.add('block')
+    
     const tabElements = Array.from(this.children).filter(
       (element): element is TabsTab => element.tagName === 'TABS-TAB',
     )
