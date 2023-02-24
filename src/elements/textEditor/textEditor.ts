@@ -26,7 +26,8 @@ export class TextEditor extends HTMLElement {
       console.error(this.#template.error)
       return
     }
-    this.appendChild(this.#template.node)
+
+    this.#template.mount(this)
     this.classList.add('grid')
 
     this.#editorTextState?.onChange((text) => this.#onTextChange(text))

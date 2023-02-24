@@ -1,8 +1,9 @@
 export type ParsedTemplateOk = {
+  ok: true
   node: DocumentFragment
   slots: Record<string, Element[]>
   forEachSlot: (slotName: string, callback: (slot: Element) => void) => void
-  ok: true
+  mount: (element: HTMLElement) => void
 }
 
 export type ParsedTemplateError = {
@@ -45,6 +46,14 @@ export function parseTemplate(templateId: string): ParsedTemplate {
       for (const slot of slots[slotName]) {
         callback(slot)
       }
+    },
+    mount(element) {
+      const contentSlot = node.querySelector('[data-slot=content]')
+      if (contentSlot !== null) {
+        const content = Array.from(element.children)
+        contentSlot.append(...content)
+      }
+      element.appendChild(node)
     },
   }
 }

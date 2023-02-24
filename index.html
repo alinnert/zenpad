@@ -14,9 +14,26 @@
 
     <app-sidebar>
       <tabs-container>
-        <tabs-tab label="General"> General tab </tabs-tab>
+        <tabs-tab label="General">
+          <number-input
+            label="Font size"
+            value-id="font-size"
+            min="10"
+            max="30"
+            default-value="16"
+          ></number-input>
 
-        <tabs-tab label="Themes"> Themes tab </tabs-tab>
+          <number-input
+            label="Line height"
+            value-id="line-height"
+            min="1"
+            max="3"
+            step="0.1"
+            default-value="1.6"
+          ></number-input>
+        </tabs-tab>
+
+        <tabs-tab label="Themes">Themes tab</tabs-tab>
 
         <tabs-tab label="About">
           <div class="prose">
@@ -49,17 +66,24 @@
 
     <template id="app-frame-template">
       <div class="fixed inset-0 grid grid-rows-[auto,1fr] bg-sky-50">
-        <div class="grid grid-cols-[1fr,auto] px-4 py-2">
+        <div class="grid grid-cols-[auto,1fr,auto] px-4 py-2">
           <div>
             <h1 data-slot="toggle-sidebar">zenpad</h1>
           </div>
+          <div></div>
           <div>
             <display-time></display-time>
           </div>
         </div>
 
-        <div class="grid grid-cols-2" data-slot="editors"></div>
+        <div class="grid grid-cols-2" data-slot="content"></div>
       </div>
+    </template>
+
+    <template id="app-sidebar-template">
+      <div class="text-xl">Settings</div>
+      <div data-slot="toggle-sidebar">Close</div>
+      <div data-slot="content"></div>
     </template>
 
     <template id="text-editor-template">
@@ -70,6 +94,29 @@
           <div class="px-4 py-2" data-slot="header"></div>
           <div class="grid whitespace-pre-wrap" data-slot="editor"></div>
           <div class="px-4 py-2" data-slot="footer"></div>
+        </div>
+      </div>
+    </template>
+
+    <template id="tabs-container-template">
+      <div class="flex justify-center gap-x-2 py-4" data-slot="tabs"></div>
+      <div data-slot="content"></div>
+    </template>
+
+    <template id="number-input-template">
+      <div class="grid grid-cols-[1fr,auto] mb-4">
+        <div data-slot="label"></div>
+        <div class="flex items-center">
+          <div data-slot="value" class="mr-4"></div>
+          <button
+            data-slot="decrease-button"
+            class="px-4 py-1 bg-gray-200 mr-px rounded-l-md"
+          >
+            -
+          </button>
+          <button data-slot="increase-button" class="px-4 py-1 bg-gray-200 rounded-r-md">
+            +
+          </button>
         </div>
       </div>
     </template>
