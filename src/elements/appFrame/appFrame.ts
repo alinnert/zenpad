@@ -12,6 +12,7 @@ export class AppFrame extends HTMLElement {
     }
 
     this.classList.add('block')
+    this.appendChild(this.#template.node)
 
     this.#template.forEachSlot('editors', (editorsSlot) => {
       const textEditors = Array.from(this.children).filter(
@@ -21,7 +22,7 @@ export class AppFrame extends HTMLElement {
       editorsSlot.append(...textEditors)
     })
 
-    this.#template.forEachSlot('toggleSidebar', (toggleSidebarSlot) => {
+    this.#template.forEachSlot('toggle-sidebar', (toggleSidebarSlot) => {
       toggleSidebarSlot.addEventListener('click', () => {
         isSidebarOpenState.set(!isSidebarOpenState.value)
       })
