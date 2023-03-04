@@ -1,3 +1,4 @@
+import { classNames } from '../../lib/templates/classNames.js'
 import { createAutomatedValue } from '../../lib/reactiveValues/createAutomatedValue'
 
 function getTimeString(): string {
@@ -16,6 +17,10 @@ export class DisplayTime extends HTMLElement {
   })
 
   connectedCallback() {
+    this.classList.add(
+      ...classNames('tabular-nums font-features-[ss01] font-medium px-3'),
+    )
+
     this.#timer.onChange((time) => {
       this.textContent = time
     })

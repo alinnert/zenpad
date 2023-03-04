@@ -11,3 +11,7 @@ export type AnyReactiveValue<
   | ReactiveValue<Sources[K]>
   | ComputedValue<Sources[K]>
   | AutomatedValue<Sources[K]>
+
+export type ReactiveSources<Sources extends unknown[]> = {
+  [K in keyof Sources]: AnyReactiveValue<Sources, K>
+}

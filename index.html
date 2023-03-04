@@ -15,60 +15,82 @@
     <app-sidebar>
       <tabs-container>
         <tabs-tab label="General">
-          <number-input
-            label="Font size"
-            value-id="font-size"
-            min="10"
-            max="30"
-            default-value="16"
-          ></number-input>
+          <basic-content>
+            <number-input
+              label="Font size"
+              value-id="font-size"
+              min="10"
+              max="30"
+              default-value="16"
+            ></number-input>
 
-          <number-input
-            label="Line height"
-            value-id="line-height"
-            min="1"
-            max="3"
-            step="0.1"
-            default-value="1.6"
-          ></number-input>
+            <number-input
+              label="Line height"
+              value-id="line-height"
+              min="1"
+              max="3"
+              step="0.1"
+              default-value="1.6"
+            ></number-input>
+
+            <div>Show clock</div>
+
+            <div>Word counter style (word+char / word / char / none)</div>
+          </basic-content>
         </tabs-tab>
 
-        <tabs-tab label="Themes">Themes tab</tabs-tab>
+        <tabs-tab label="Themes">
+          <basic-content>
+            <tabs-container type="pills">
+              <tabs-tab label="Colors"> Color themes </tabs-tab>
+
+              <tabs-tab label="Images"> Background images </tabs-tab>
+            </tabs-container>
+          </basic-content>
+        </tabs-tab>
 
         <tabs-tab label="About">
-          <div class="prose">
-            <h2>About zenpad</h2>
-            <p>Zenpad is a text editor for the web.</p>
-            <p>This app has been made possible thanks to:</p>
-            <ul>
-              <li>
-                <a href="https://github.com/codemirror/dev/">CodeMirror</a>
-              </li>
-              <li>
-                <a href="https://github.com/vitejs/vite">Vite</a>
-              </li>
-              <li>
-                <a href="https://github.com/microsoft/TypeScript">TypeScript</a>
-              </li>
-              <li>
-                <a href="https://github.com/tailwindlabs/tailwindcss"
-                  >TailwindCSS</a
-                >, <a href="https://postcss.org/">PostCSS</a>,
-                <a href="https://github.com/postcss/autoprefixer"
-                  >Autoprefixer</a
-                >
-              </li>
-            </ul>
-          </div>
+          <basic-content>
+            <div class="prose">
+              <p>Zenpad is a text editor for the web.</p>
+              <p>This app has been made possible thanks to:</p>
+              <ul>
+                <li>
+                  <a href="https://github.com/codemirror/dev/">CodeMirror</a>
+                </li>
+                <li>
+                  <a href="https://github.com/vitejs/vite">Vite</a>
+                </li>
+                <li>
+                  <a href="https://github.com/microsoft/TypeScript"
+                    >TypeScript</a
+                  >
+                </li>
+                <li>
+                  <a href="https://github.com/tailwindlabs/tailwindcss"
+                    >TailwindCSS</a
+                  >, <a href="https://postcss.org/">PostCSS</a>,
+                  <a href="https://github.com/postcss/autoprefixer"
+                    >Autoprefixer</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </basic-content>
         </tabs-tab>
       </tabs-container>
     </app-sidebar>
 
     <template id="app-frame-template">
       <div class="fixed inset-0 grid grid-rows-[auto,1fr] bg-sky-50">
-        <div class="grid grid-cols-[auto,1fr,auto] px-4 py-2">
+        <div class="grid grid-cols-[auto,1fr,auto] p-2 items-center">
           <div>
-            <h1 data-slot="toggle-sidebar">zenpad</h1>
+            <h1
+              data-slot="toggle-sidebar"
+              class="px-3 py-1 hover:bg-black/10 active:bg-black/20 rounded"
+            >
+              zenpad
+            </h1>
           </div>
           <div></div>
           <div>
@@ -81,9 +103,16 @@
     </template>
 
     <template id="app-sidebar-template">
-      <div class="text-xl">Settings</div>
-      <div data-slot="toggle-sidebar">Close</div>
-      <div data-slot="content"></div>
+      <div class="flex items-center px-6 py-4">
+        <div class="text-xl font-semibold mr-auto">zenpad settings</div>
+        <div
+          data-slot="toggle-sidebar"
+          class="px-3 py-1 hover:bg-black/10 active:bg-black/20 rounded"
+        >
+          Close
+        </div>
+      </div>
+      <div data-slot="content" class="grid"></div>
     </template>
 
     <template id="text-editor-template">
@@ -98,8 +127,13 @@
       </div>
     </template>
 
-    <template id="tabs-container-template">
-      <div class="flex justify-center gap-x-2 py-4" data-slot="tabs"></div>
+    <template id="tabs-container-template--type:pills">
+      <div class="flex gap-x-1" data-slot="tabs"></div>
+      <div data-slot="content"></div>
+    </template>
+
+    <template id="tabs-container-template--type:underline">
+      <div class="flex border-b pl-2 border-gray-300" data-slot="tabs"></div>
       <div data-slot="content"></div>
     </template>
 
@@ -114,7 +148,10 @@
           >
             -
           </button>
-          <button data-slot="increase-button" class="px-4 py-1 bg-gray-200 rounded-r-md">
+          <button
+            data-slot="increase-button"
+            class="px-4 py-1 bg-gray-200 rounded-r-md"
+          >
             +
           </button>
         </div>

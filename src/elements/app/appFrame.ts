@@ -1,8 +1,19 @@
-import { parseTemplate } from '../../lib/templateParser/parseTemplate'
+import { addEvent } from '../../lib/templates/addEvent.js'
+import { parseTemplate } from '../../lib/templates/parseTemplate'
 import { isSidebarOpenState } from './appSidebar'
 
 export class AppFrame extends HTMLElement {
   #template = parseTemplate('app-frame-template')
+
+  constructor() {
+    super()
+
+    if (!this.#template.ok) return
+
+    addEvent(this.#template.slots['toggle-sidebar'], 'click', () => {
+      isSidebarOpenState.set(!isSidebarOpenState.value)
+    })
+  }
 
   connectedCallback() {
     if (!this.#template.ok) {
@@ -12,11 +23,5 @@ export class AppFrame extends HTMLElement {
 
     this.classList.add('block')
     this.#template.mount(this)
-
-    this.#template.forEachSlot('toggle-sidebar', (toggleSidebarSlot) => {
-      toggleSidebarSlot.addEventListener('click', () => {
-        isSidebarOpenState.set(!isSidebarOpenState.value)
-      })
-    })
   }
 }

@@ -1,8 +1,5 @@
-import { AnyReactiveValue, ReactiveValueListener } from './types'
-
-type ReactiveSources<Sources extends unknown[]> = {
-  [K in keyof Sources]: AnyReactiveValue<Sources, K>
-}
+import { addEvent } from '../templates/addEvent.js'
+import { ReactiveSources, ReactiveValueListener } from './types'
 
 export type ComputedValue<Result> = {
   readonly value: Result
@@ -38,10 +35,11 @@ export function createComputedValue<Sources extends unknown[], Result>(
     },
 
     onChange(listener) {
-      target.addEventListener('change', (event) => {
+      addEvent(target, 'change', (event) => {
         const customEvent = event as CustomEvent<Result>
         listener(customEvent.detail)
       })
+
       listener(value)
     },
   }

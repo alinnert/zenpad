@@ -1,3 +1,4 @@
+import { addEvent } from '../templates/addEvent.js'
 import { ReactiveValueListener } from './types'
 
 export type CreateAutomatedValueCallback<T> = (
@@ -29,12 +30,13 @@ export function createAutomatedValue<T>(
     },
 
     onChange(listener) {
-      target.addEventListener('change', (event) => {
+      addEvent(target, 'change', (event) => {
         const customEvent = event as CustomEvent
         listener(customEvent.detail)
       })
+
       if (value === null) return
       listener(value)
-    }
+    },
   }
 }

@@ -1,3 +1,4 @@
+import { addEvent } from '../templates/addEvent.js'
 import { ReactiveValueListener } from './types'
 
 export type ReactiveValue<T> = {
@@ -28,7 +29,7 @@ export function createValue<T>(initialValue: T): ReactiveValue<T> {
     },
 
     onChange(listener) {
-      target.addEventListener('change', (event) => {
+      addEvent(target, 'change', (event) => {
         const customEvent = event as CustomEvent<T>
         listener(customEvent.detail)
       })
