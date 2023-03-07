@@ -1,25 +1,15 @@
-import { addEvent } from '../../lib/templates/addEvent.js'
-import { classNames } from '../../lib/templates/classNames.js'
 import { isNonNullable } from '../../lib/basics/isNonNullable'
 import { createComputedValue } from '../../lib/reactiveValues/createComputedValue'
 import { createValue } from '../../lib/reactiveValues/createValue'
+import { addEvent } from '../../lib/templates/addEvent.js'
+import { classNames } from '../../lib/templates/classNames.js'
 import { getChildren } from '../../lib/templates/getChildren'
-import {
-  ParsedTemplate,
-  parseTemplate,
-} from '../../lib/templates/parseTemplate'
+import { parseTemplate } from '../../lib/templates/parseTemplate'
 import { TabType, tabTypes } from './tabLabel.js'
 import { TabsTab } from './tabsTab'
 
 export class TabsContainer extends HTMLElement {
-  #cachedTemplate: ParsedTemplate | null = null
-  get #template(): ParsedTemplate {
-    if (this.#cachedTemplate === null) {
-      const templateId = `tabs-container-template--type:${this.#tabsType}`
-      this.#cachedTemplate = parseTemplate(templateId)
-    }
-    return this.#cachedTemplate
-  }
+  #template = parseTemplate(`tabs-container-template--type:${this.#tabsType}`)
   get #tabsType(): TabType {
     const tabsType = this.getAttribute('type') as TabType
     return tabTypes.includes(tabsType) ? tabsType : 'underline'
@@ -46,15 +36,23 @@ export class TabsContainer extends HTMLElement {
     },
   )
 
+  constructor() {
+    super()
+
+    this.classList.add(
+      ...classNames(
+        'block',
+        'grid grid-rows-[auto,1fr] gap-y-6',
+        'overflow-hidden',
+      ),
+    )
+  }
+
   connectedCallback() {
     if (!this.#template.ok) {
       console.error(this.#template.error)
       return
     }
-
-    this.classList.add(
-      ...classNames('block', 'grid grid-rows-[auto,1fr]', 'overflow-hidden'),
-    )
 
     const tabElements = getChildren<TabsTab>(this, 'tabs-tab')
     this.#tabElements.set(tabElements)
