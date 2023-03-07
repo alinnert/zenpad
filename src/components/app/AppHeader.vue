@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { showClockState, toggleSidebar } from '@/states/basicUiStates'
+import { toggleSidebar } from '@/states/basicUiStates'
+import { showClockState } from '@/states/generalSettingsStates'
+import { storageActionsRunningState } from '@/sys/storage'
 import DisplayClock from '../clock/DisplayClock.vue'
 import AlignmentContainer from '../layout/AlignmentContainer.vue'
 </script>
@@ -12,7 +14,12 @@ import AlignmentContainer from '../layout/AlignmentContainer.vue'
       </template>
       <div>zenpad</div>
       <template #right>
-        <DisplayClock v-if="showClockState" />
+        <div class="flex gap-x-4">
+          <div v-if="storageActionsRunningState > 0">
+            {{ storageActionsRunningState }} tasks running
+          </div>
+          <DisplayClock v-if="showClockState" />
+        </div>
       </template>
     </AlignmentContainer>
   </div>

@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
-import { ref, watch } from 'vue'
 import FormLabel from './FormLabel.vue'
 
-const props = defineProps<{ label: string; modelValue: boolean }>()
-
-const emit = defineEmits(['update:modelValue'])
-
-const value = ref(props.modelValue)
-
-watch(value, (newValue) => {
-  emit('update:modelValue', newValue)
-})
+defineProps<{ label: string; modelValue: boolean }>()
+defineEmits(['update:modelValue'])
 </script>
 
 <template>
@@ -20,14 +12,15 @@ watch(value, (newValue) => {
       ><FormLabel>{{ label }}</FormLabel></SwitchLabel
     >
     <Switch
-      v-model="value"
+      :model-value="modelValue"
+      @update:model-value="(value) => $emit('update:modelValue', value)"
       class="grid items-center w-12 h-8 rounded-full cursor-default"
-      :class="[{ 'bg-gray-300': !value, 'bg-sky-700': value }]"
+      :class="[{ 'bg-gray-300': !modelValue, 'bg-sky-700': modelValue }]"
     >
       <span
         class="inline-block translate-x-1 w-6 h-6 rounded-full transition-transform ease-out bg-white"
         :class="{
-          'translate-x-5': value,
+          'translate-x-5': modelValue,
         }"
       ></span>
     </Switch>

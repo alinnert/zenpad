@@ -1,31 +1,43 @@
 <script setup lang="ts">
 import NumberInput from '@/components/forms/NumberInput.vue'
-import { ref, watch } from 'vue'
+import {
+  fontSizeState,
+  lineHeightState,
+  setFontSize,
+  setLineHeight,
+  setShowClock,
+  showClockState,
+} from '@/states/generalSettingsStates'
 import ToggleInput from '../../components/forms/ToggleInput.vue'
-import { showClockState, toggleClock } from '../../states/basicUiStates'
-
-const showClock = ref(showClockState.value)
-watch(showClock, (newValue) => {
-  toggleClock(newValue)
-})
-
-const fontSize = ref(16)
-watch(fontSize, (newFontSize) => {
-  console.log('new font size', newFontSize)
-})
-
-const lineHeight = ref(1.6)
-watch(lineHeight, (newLineHeight) => {
-  console.log('new line height', newLineHeight)
-})
 </script>
 
 <template>
   <div>
-    <NumberInput v-model="fontSize" :min="10" :max="36">Font size</NumberInput>
-    <NumberInput v-model="lineHeight" :step="0.1" :min="1" :max="3">
+    <NumberInput
+      v-if="fontSizeState !== undefined"
+      :model-value="fontSizeState"
+      @update:model-value="setFontSize"
+      :min="10"
+      :max="36"
+      >Font size</NumberInput
+    >
+
+    <NumberInput
+      v-if="lineHeightState !== undefined"
+      :model-value="lineHeightState"
+      @update:model-value="setLineHeight"
+      :step="0.1"
+      :min="1"
+      :max="3"
+    >
       Line height
     </NumberInput>
-    <ToggleInput label="Show clock" v-model="showClock"></ToggleInput>
+
+    <ToggleInput
+      v-if="showClockState !== undefined"
+      :model-value="showClockState"
+      @update:model-value="setShowClock"
+      label="Show clock"
+    ></ToggleInput>
   </div>
 </template>

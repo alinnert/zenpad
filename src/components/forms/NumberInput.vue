@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import ButtonGroup from '../ui/ButtonGroup.vue'
 import DefaultButton from '../ui/DefaultButton.vue'
 import FormLabel from './FormLabel.vue'
@@ -16,41 +16,44 @@ const props = withDefaults(
 
 const emit = defineEmits(['update:modelValue'])
 
-const value = ref(props.modelValue)
-watch(value, (newValue) => {
-  emit('update:modelValue', newValue)
-})
-
-const reachedMin = computed(() => value.value <= props.min)
-const reachedMax = computed(() => value.value >= props.max)
+const reachedMin = computed(() => props.modelValue <= props.min)
+const reachedMax = computed(() => props.modelValue >= props.max)
 
 function updateValue(action: 'increment' | 'decrement'): void {
-  const decimalFactor = getDecimalFactor(props.step)
   const directionFactor = action === 'decrement' ? -1 : 1
-  const shiftedValue = value.value * decimalFactor
-  const shiftedStep = props.step * decimalFactor * directionFactor
+  const shiftedValue = props.modelValue * decimalFactor.value
+  const shiftedStep = props.step * decimalFactor.value * directionFactor
   const shiftedResult = shiftedValue + shiftedStep
-  value.value = shiftedResult / decimalFactor
+  const newValue = shiftedResult / decimalFactor.value
+  emit('update:modelValue', newValue)
 }
 
-function getDecimalFactor(step: number): number {
-  const stepString = step.toString()
+const decimalDigits = computed((): number => {
+  const stepString = props.step.toString()
   const matches = stepString.match(/^\d+(\.(\d+))?$/)
   if (matches === null) {
-    return 1
+    return 0
   }
   const decimalString = matches[2]
   if (decimalString === undefined) {
-    return 1
+    return 0
   }
-  return 1 * 10 ** decimalString.length
-}
+  return decimalString.length
+})
+
+const decimalFactor = computed((): number => {
+  return 1 * 10 ** decimalDigits.value
+})
+
+const displayValue = computed(() => {
+  return props.modelValue.toFixed(decimalDigits.value)
+})
 </script>
 
 <template>
   <div class="px-6 py-4 grid grid-cols-[1fr,auto,auto] gap-x-4 items-center">
     <FormLabel><slot></slot></FormLabel>
-    <div>{{ modelValue }}</div>
+    <div>{{ displayValue }}</div>
     <ButtonGroup>
       <DefaultButton @click="updateValue('decrement')" :disabled="reachedMin">
         <svg

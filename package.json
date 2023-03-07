@@ -15,6 +15,7 @@
     "@codemirror/commands": "^6.2.1",
     "@codemirror/view": "^6.9.1",
     "@headlessui/vue": "^1.7.12",
+    "idb-keyval": "^6.2.0",
     "pinia": "^2.0.28",
     "vue": "^3.2.45"
   },
