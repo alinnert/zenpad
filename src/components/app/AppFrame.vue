@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import TextEditor from '../editor/TextEditor.vue';
-import AppHeader from './AppHeader.vue';
-
+import TextEditor from '../editor/TextEditor.vue'
+import AppHeader from './AppHeader.vue'
 </script>
 
 <template>
-  <AppHeader />
-  <TextEditor name="left" />
-  <TextEditor name="right" />
+  <div class="fixed inset-0 grid grid-rows-[auto,1fr]">
+    <AppHeader />
+    <div class="relative">
+      <TextEditor name="a" />
+      <TextEditor name="b" />
+    </div>
+  </div>
 </template>

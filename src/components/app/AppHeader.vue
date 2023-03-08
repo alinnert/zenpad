@@ -16,7 +16,8 @@ import AlignmentContainer from '../layout/AlignmentContainer.vue'
       <template #right>
         <div class="flex gap-x-4">
           <div v-if="storageActionsRunningState > 0">
-            {{ storageActionsRunningState }} tasks running
+            {{ storageActionsRunningState }}
+            {{ storageActionsRunningState === 1 ? 'task' : 'tasks' }} running
           </div>
           <DisplayClock v-if="showClockState" />
         </div>

@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import ButtonGroup from '../ui/ButtonGroup.vue'
-import DefaultButton from '../ui/DefaultButton.vue'
+import ButtonGroup from '../ui/UiButtonGroup.vue'
+import DefaultButton from '../ui/UiButton.vue'
 import FormLabel from './FormLabel.vue'
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: number
-    min?: number
-    max?: number
-    step?: number
-  }>(),
-  { min: -Infinity, max: Infinity, step: 1 },
-)
+type Props = { modelValue: number; min?: number; max?: number; step?: number }
+const props = withDefaults(defineProps<Props>(), {
+  min: -Infinity,
+  max: Infinity,
+  step: 1,
+})
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{ (e: 'update:modelValue', value: number): void }>()
 
 const reachedMin = computed(() => props.modelValue <= props.min)
 const reachedMax = computed(() => props.modelValue >= props.max)

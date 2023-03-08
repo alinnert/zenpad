@@ -3,9 +3,6 @@ import NumberInput from '@/components/forms/NumberInput.vue'
 import {
   fontSizeState,
   lineHeightState,
-  setFontSize,
-  setLineHeight,
-  setShowClock,
   showClockState,
 } from '@/states/generalSettingsStates'
 import ToggleInput from '../../components/forms/ToggleInput.vue'
@@ -15,8 +12,7 @@ import ToggleInput from '../../components/forms/ToggleInput.vue'
   <div>
     <NumberInput
       v-if="fontSizeState !== undefined"
-      :model-value="fontSizeState"
-      @update:model-value="setFontSize"
+      v-model="fontSizeState"
       :min="10"
       :max="36"
       >Font size</NumberInput
@@ -24,8 +20,7 @@ import ToggleInput from '../../components/forms/ToggleInput.vue'
 
     <NumberInput
       v-if="lineHeightState !== undefined"
-      :model-value="lineHeightState"
-      @update:model-value="setLineHeight"
+      v-model="lineHeightState"
       :step="0.1"
       :min="1"
       :max="3"
@@ -35,8 +30,7 @@ import ToggleInput from '../../components/forms/ToggleInput.vue'
 
     <ToggleInput
       v-if="showClockState !== undefined"
-      :model-value="showClockState"
-      @update:model-value="setShowClock"
+      v-model="showClockState"
       label="Show clock"
     ></ToggleInput>
   </div>

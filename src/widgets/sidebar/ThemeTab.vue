@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MainTabs from '@/components/ui/MainTabs.vue'
+import MainTabs from '@/components/ui/UiTabs.vue'
 import {
   currentThemeTabState,
   setCurrentThemeTab,

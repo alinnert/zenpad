@@ -4,7 +4,7 @@ import { onMounted } from 'vue'
 import AboutTab from '../../widgets/sidebar/AboutTab.vue'
 import GeneralTab from '../../widgets/sidebar/GeneralTab.vue'
 import ThemeTab from '../../widgets/sidebar/ThemeTab.vue'
-import MainTabs from '../ui/MainTabs.vue'
+import MainTabs from '../ui/UiTabs.vue'
 
 onMounted(() => {
   addEventListener('keydown', (event) => {

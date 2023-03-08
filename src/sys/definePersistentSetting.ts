@@ -5,14 +5,16 @@ export type DefineSettingOptions<T> = { storageKey: string; defaultValue: T }
 
 export type DefineSettingResult<T> = {
   state: Ref<T>
-  setValue: (value?: T) => void
 }
+
+export const initializingSettingsCountState = ref(0)
 
 export function definePersistentSetting<T>({
   storageKey,
   defaultValue,
 }: DefineSettingOptions<T>): DefineSettingResult<T> {
   const state = ref(defaultValue) as Ref<T>
+  initializingSettingsCountState.value += 1
 
   watch(state, (value) => {
     setStorageValue(storageKey, value)
@@ -20,12 +22,8 @@ export function definePersistentSetting<T>({
 
   getStorageValue(storageKey).then((value) => {
     state.value = (value ?? defaultValue) as T
+    initializingSettingsCountState.value -= 1
   })
 
-  return {
-    state,
-    setValue(value) {
-      state.value = value ?? defaultValue
-    },
-  }
+  return { state }
 }

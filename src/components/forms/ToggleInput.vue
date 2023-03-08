@@ -3,7 +3,7 @@ import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import FormLabel from './FormLabel.vue'
 
 defineProps<{ label: string; modelValue: boolean }>()
-defineEmits(['update:modelValue'])
+defineEmits<{ (e: 'update:modelValue', value: boolean): void }>()
 </script>
 
 <template>
