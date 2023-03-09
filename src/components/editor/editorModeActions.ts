@@ -27,20 +27,18 @@ export function useEditorModeActions({
   }
 
   function swap(): void {
-    switch (editorModeState.value.mode) {
-      case 'neutral':
-        setEditorMode(
-          editorModeState.value.order === 'ab'
-            ? editorModes.neutralBA
-            : editorModes.neutralAB,
-        )
-        break
-      case 'single':
-        setEditorMode(
-          editorModeState.value.show === 'a'
-            ? editorModes.singleB
-            : editorModes.singleA,
-        )
+    if (editorModeState.value.mode === 'neutral') {
+      setEditorMode(
+        editorModeState.value.order === 'ab'
+          ? editorModes.neutralBA
+          : editorModes.neutralAB,
+      )
+    } else if (editorModeState.value.mode === 'single') {
+      setEditorMode(
+        editorModeState.value.show === 'a'
+          ? editorModes.singleB
+          : editorModes.singleA,
+      )
     }
   }
 
