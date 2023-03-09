@@ -1,5 +1,9 @@
 import { editorModeState } from '@/states/generalSettingsStates'
-import { compareEditorModes, editorModes } from '@/sys/editorModes'
+import {
+  editorModes,
+  useIsOneOfEditorModes,
+  type EditorMode,
+} from '@/sys/editorModes'
 import type { EditorName } from './TextEditor.vue'
 
 export type UseEditorModeActionsOptions = { name: EditorName }
@@ -16,53 +20,85 @@ export type EditorModeActions = {
 export function useEditorModeActions({
   name,
 }: UseEditorModeActionsOptions): EditorModeActions {
+  const isOneOfEditorModes = useIsOneOfEditorModes(editorModeState)
+
+  function setEditorMode(editorMode: EditorMode): void {
+    editorModeState.value = editorMode
+  }
+
   function swap(): void {
     switch (editorModeState.value.mode) {
       case 'neutral':
-        editorModeState.value =
+        setEditorMode(
           editorModeState.value.order === 'ab'
             ? editorModes.neutralBA
-            : editorModes.neutralAB
+            : editorModes.neutralAB,
+        )
         break
       case 'single':
-        editorModeState.value =
+        setEditorMode(
           editorModeState.value.show === 'a'
             ? editorModes.singleB
-            : editorModes.singleA
+            : editorModes.singleA,
+        )
     }
   }
 
   function focus(): void {
-    editorModeState.value =
-      name === 'a' ? editorModes.focusedARight : editorModes.focusedBLeft
+    if (name === 'a') {
+      if (isOneOfEditorModes([editorModes.neutralAB])) {
+        setEditorMode(editorModes.focusedARight)
+      } else if (isOneOfEditorModes([editorModes.neutralBA])) {
+        setEditorMode(editorModes.focusedALeft)
+      } else if (isOneOfEditorModes([editorModes.focusedBLeft])) {
+        setEditorMode(editorModes.focusedARight)
+      } else if (isOneOfEditorModes([editorModes.focusedBRight])) {
+        setEditorMode(editorModes.focusedALeft)
+      }
+    } else if (name === 'b') {
+      if (isOneOfEditorModes([editorModes.neutralAB])) {
+        setEditorMode(editorModes.focusedBLeft)
+      } else if (isOneOfEditorModes([editorModes.neutralBA])) {
+        setEditorMode(editorModes.focusedBRight)
+      } else if (isOneOfEditorModes([editorModes.focusedALeft])) {
+        setEditorMode(editorModes.focusedBRight)
+      } else if (isOneOfEditorModes([editorModes.focusedARight])) {
+        setEditorMode(editorModes.focusedBLeft)
+      }
+    }
   }
 
   function unfocus(): void {
-    editorModeState.value = editorModes.neutralAB
+    if (editorModeState.value.mode !== 'focused') return
+
+    if (
+      isOneOfEditorModes([editorModes.focusedARight, editorModes.focusedBLeft])
+    ) {
+      setEditorMode(editorModes.neutralAB)
+    } else {
+      setEditorMode(editorModes.neutralBA)
+    }
   }
 
   function maximize(): void {
-    editorModeState.value =
-      name === 'a' ? editorModes.singleA : editorModes.singleB
+    setEditorMode(name === 'a' ? editorModes.singleA : editorModes.singleB)
   }
 
   function restore(): void {
-    editorModeState.value = editorModes.neutralAB
+    setEditorMode(editorModes.neutralAB)
   }
 
   function switchSide(): void {
     if (editorModeState.value.mode !== 'focused') return
 
-    const currentMode = editorModeState.value
-
-    if (compareEditorModes(currentMode, [editorModes.focusedALeft])) {
-      editorModeState.value = editorModes.focusedARight
-    } else if (compareEditorModes(currentMode, [editorModes.focusedARight])) {
-      editorModeState.value = editorModes.focusedALeft
-    } else if (compareEditorModes(currentMode, [editorModes.focusedBLeft])) {
-      editorModeState.value = editorModes.focusedBRight
-    } else if (compareEditorModes(currentMode, [editorModes.focusedBRight])) {
-      editorModeState.value = editorModes.focusedBLeft
+    if (isOneOfEditorModes([editorModes.focusedALeft])) {
+      setEditorMode(editorModes.focusedARight)
+    } else if (isOneOfEditorModes([editorModes.focusedARight])) {
+      setEditorMode(editorModes.focusedALeft)
+    } else if (isOneOfEditorModes([editorModes.focusedBLeft])) {
+      setEditorMode(editorModes.focusedBRight)
+    } else if (isOneOfEditorModes([editorModes.focusedBRight])) {
+      setEditorMode(editorModes.focusedBLeft)
     }
   }
 

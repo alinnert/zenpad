@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { editorModeState } from '@/states/generalSettingsStates'
 import UiButton from '../ui/UiButton.vue'
+import UiButtonGroup from '../ui/UiButtonGroup.vue'
 import { useCodeMirror } from './codeMirror'
 import { useEditorModeActions } from './editorModeActions'
 import { useEditorModeConditions } from './editorModeConditions'
@@ -34,47 +35,50 @@ const modeActions = useEditorModeActions({ name: props.name })
     }"
   >
     <div>
-      <span>Header</span>
-      <UiButton
-        @click="modeActions.swap"
-        v-if="editorModeState.mode !== 'focused'"
-      >
-        Swap
-      </UiButton>
-      <UiButton
-        @click="modeActions.focus"
-        v-if="
-          editorModeState.mode !== 'focused' ||
-          (editorModeState.mode === 'focused' &&
-            editorModeState.primary !== name)
-        "
-      >
-        Focus
-      </UiButton>
-      <UiButton
-        @click="modeActions.unfocus"
-        v-if="editorModeState.mode === 'focused'"
-      >
-        Unfocus
-      </UiButton>
-      <UiButton
-        @click="modeActions.maximize"
-        v-if="editorModeState.mode !== 'single'"
-      >
-        Maximize
-      </UiButton>
-      <UiButton
-        @click="modeActions.restore"
-        v-if="editorModeState.mode === 'single'"
-      >
-        Restore
-      </UiButton>
-      <UiButton
-        @click="modeActions.switchSide"
-        v-if="editorModeState.mode === 'focused'"
-      >
-        Change side
-      </UiButton>
+      <span>Header {{ name }}</span>
+      <UiButtonGroup>
+        <UiButton
+          @click="modeActions.swap"
+          v-if="editorModeState.mode !== 'focused'"
+        >
+          []&lt;-&gt;[]
+        </UiButton>
+        <UiButton
+          @click="modeActions.focus"
+          v-if="
+            editorModeState.mode !== 'focused' ||
+            (editorModeState.mode === 'focused' &&
+              editorModeState.primary !== name)
+          "
+        >
+          <template v-if="name === 'a'">[-][]</template>
+          <template v-else>[][-]</template>
+        </UiButton>
+        <UiButton
+          @click="modeActions.unfocus"
+          v-if="editorModeState.mode === 'focused'"
+        >
+          [][]
+        </UiButton>
+        <UiButton
+          @click="modeActions.maximize"
+          v-if="editorModeState.mode !== 'single'"
+        >
+          [---]
+        </UiButton>
+        <UiButton
+          @click="modeActions.restore"
+          v-if="editorModeState.mode === 'single'"
+        >
+          [][]
+        </UiButton>
+        <UiButton
+          @click="modeActions.switchSide"
+          v-if="editorModeState.mode === 'focused'"
+        >
+          &lt;-&gt;
+        </UiButton>
+      </UiButtonGroup>
     </div>
     <div class="grid" ref="editor"></div>
     <div>Footer</div>

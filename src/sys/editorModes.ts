@@ -1,3 +1,5 @@
+import type { Ref } from 'vue'
+
 export type EditorMode =
   | { mode: 'neutral'; order: 'ab' | 'ba' }
   | { mode: 'focused'; primary: 'a' | 'b'; secondary: 'left' | 'right' }
@@ -34,4 +36,14 @@ export function compareEditorModes(
   return collection.some((editorMode) => {
     return stringifyEditorMode(editorMode) === stringifyEditorMode(needle)
   })
+}
+
+export type IsOneOfEditorModes = (collection: EditorMode[]) => boolean
+
+export function useIsOneOfEditorModes(
+  needle: Ref<EditorMode>,
+): IsOneOfEditorModes {
+  return (collection) => {
+    return compareEditorModes(needle.value, collection)
+  }
 }
