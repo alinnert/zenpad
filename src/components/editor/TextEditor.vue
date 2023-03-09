@@ -1,84 +1,17 @@
 <script setup lang="ts">
 import { editorModeState } from '@/states/generalSettingsStates'
-import { compareEditorModes, editorModes } from '@/sys/editorModes'
-import { insertTab } from '@codemirror/commands'
-import { EditorView, keymap } from '@codemirror/view'
-import { computed, onMounted, ref } from 'vue'
 import UiButton from '../ui/UiButton.vue'
+import { useCodeMirror } from './codeMirror'
+import { useEditorModeActions } from './editorModeActions'
+import { useEditorModeConditions } from './editorModeConditions'
 
-const props = defineProps<{ name: 'a' | 'b' }>()
+export type EditorName = 'a' | 'b'
 
-const editor = ref<HTMLDivElement | null>(null)
+const props = defineProps<{ name: EditorName }>()
 
-onMounted(() => {
-  if (editor.value === null) return
-
-  new EditorView({
-    doc: '',
-    extensions: [
-      keymap.of([{ key: 'Tab', run: insertTab }]),
-      EditorView.updateListener.of((update) => {
-        if (!update.docChanged) return
-        console.log(
-          `saving ${props.name} editor, text: ${String(update.state.doc)}`,
-        )
-      }),
-    ],
-    parent: editor.value,
-  })
-})
-
-const shouldDockLeft = computed(() => {
-  return props.name === 'a'
-    ? compareEditorModes(editorModeState.value, [
-        editorModes.neutralAB,
-        editorModes.focusedARight,
-        editorModes.focusedBLeft,
-        editorModes.singleA,
-      ])
-    : compareEditorModes(editorModeState.value, [
-        editorModes.neutralBA,
-        editorModes.focusedALeft,
-        editorModes.focusedBRight,
-        editorModes.singleB,
-      ])
-})
-
-const shouldDockRight = computed(() => {
-  return props.name === 'a'
-    ? compareEditorModes(editorModeState.value, [
-        editorModes.neutralBA,
-        editorModes.focusedALeft,
-        editorModes.focusedBRight,
-        editorModes.singleA,
-      ])
-    : compareEditorModes(editorModeState.value, [
-        editorModes.neutralAB,
-        editorModes.focusedARight,
-        editorModes.focusedBLeft,
-        editorModes.singleB,
-      ])
-})
-
-const shouldDockLeftHalf = computed(() => {
-  return props.name === 'a'
-    ? compareEditorModes(editorModeState.value, [editorModes.neutralBA])
-    : compareEditorModes(editorModeState.value, [editorModes.neutralAB])
-})
-
-const shouldDockRightHalf = computed(() => {
-  return props.name === 'a'
-    ? compareEditorModes(editorModeState.value, [editorModes.neutralAB])
-    : compareEditorModes(editorModeState.value, [editorModes.neutralBA])
-})
-
-function swap(): void {
-  editorModeState.value =
-    editorModeState.value.mode === 'neutral' &&
-    editorModeState.value.order === 'ab'
-      ? editorModes.neutralBA
-      : editorModes.neutralAB
-}
+const editor = useCodeMirror({ name: props.name })
+const conditions = useEditorModeConditions({ name: props.name })
+const modeActions = useEditorModeActions({ name: props.name })
 </script>
 
 <template>
@@ -87,15 +20,61 @@ function swap(): void {
     :class="{
       'bg-teal-700/30': name === 'a',
       'bg-rose-700/30': name === 'b',
-      'left-0': shouldDockLeft,
-      'right-0': shouldDockRight,
-      'left-1/2': shouldDockLeftHalf,
-      'right-1/2': shouldDockRightHalf,
+      'left-0': conditions.shouldLeftDock,
+      'right-0': conditions.shouldRightDock,
+      'left-1/2': conditions.shouldLeftDockCenter,
+      'right-1/2': conditions.shouldRightDockCenter,
+      'left-96': conditions.shouldLeftDockLeftFixed,
+      'right-96': conditions.shouldRightDockRightFixed,
+      'left-[calc(100%-theme(spacing.96))]':
+        conditions.shouldLeftDockRightFixed,
+      'right-[calc(100%-theme(spacing.96))]':
+        conditions.shouldRightDockLeftFixed,
+      hidden: conditions.shouldHide,
     }"
   >
     <div>
       <span>Header</span>
-      <UiButton @click="swap">Swap</UiButton>
+      <UiButton
+        @click="modeActions.swap"
+        v-if="editorModeState.mode !== 'focused'"
+      >
+        Swap
+      </UiButton>
+      <UiButton
+        @click="modeActions.focus"
+        v-if="
+          editorModeState.mode !== 'focused' ||
+          (editorModeState.mode === 'focused' &&
+            editorModeState.primary !== name)
+        "
+      >
+        Focus
+      </UiButton>
+      <UiButton
+        @click="modeActions.unfocus"
+        v-if="editorModeState.mode === 'focused'"
+      >
+        Unfocus
+      </UiButton>
+      <UiButton
+        @click="modeActions.maximize"
+        v-if="editorModeState.mode !== 'single'"
+      >
+        Maximize
+      </UiButton>
+      <UiButton
+        @click="modeActions.restore"
+        v-if="editorModeState.mode === 'single'"
+      >
+        Restore
+      </UiButton>
+      <UiButton
+        @click="modeActions.switchSide"
+        v-if="editorModeState.mode === 'focused'"
+      >
+        Change side
+      </UiButton>
     </div>
     <div class="grid" ref="editor"></div>
     <div>Footer</div>
