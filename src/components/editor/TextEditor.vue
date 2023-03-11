@@ -1,16 +1,22 @@
 <script setup lang="ts">
+import { editorATextState, editorBTextState } from '@/states/editorStates'
 import { editorModeState } from '@/states/generalSettingsStates'
+import { provide } from 'vue'
 import UiButton from '../ui/UiButton.vue'
 import UiButtonGroup from '../ui/UiButtonGroup.vue'
 import { useCodeMirror } from './codeMirror'
 import { useEditorModeActions } from './editorModeActions'
 import { useEditorModeConditions } from './editorModeConditions'
+import WordCounter from './WordCounter.vue'
 
 export type EditorName = 'a' | 'b'
 
 const props = defineProps<{ name: EditorName }>()
+provide('editor-name', props.name)
 
-const editor = useCodeMirror({ name: props.name })
+const editorTextState = props.name === 'a' ? editorATextState : editorBTextState
+
+const editor = useCodeMirror({ name: props.name, textState: editorTextState })
 const conditions = useEditorModeConditions({ name: props.name })
 const modeActions = useEditorModeActions({ name: props.name })
 </script>
@@ -81,6 +87,6 @@ const modeActions = useEditorModeActions({ name: props.name })
       </UiButtonGroup>
     </div>
     <div class="grid" ref="editor"></div>
-    <div>Footer</div>
+    <WordCounter></WordCounter>
   </div>
 </template>

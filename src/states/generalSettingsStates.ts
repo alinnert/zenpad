@@ -1,5 +1,4 @@
-import { stringifyEditorMode, type EditorMode } from '@/sys/editorModes'
-import { watch } from 'vue'
+import type { EditorMode } from '@/sys/editorModes'
 import { definePersistentSetting } from '../sys/definePersistentSetting'
 
 export const { state: fontSizeState } = definePersistentSetting({
@@ -21,10 +20,3 @@ export const { state: editorModeState } = definePersistentSetting<EditorMode>({
   storageKey: 'editor-mode',
   defaultValue: { mode: 'neutral', order: 'ab' },
 })
-
-watch(
-  () => editorModeState.value,
-  (mode) => {
-    console.log(`change mode to ${stringifyEditorMode(mode)}`)
-  },
-)
